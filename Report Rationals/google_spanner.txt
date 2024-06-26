@@ -1,0 +1,26 @@
+Google Spanner is a fully managed relational database. It automatically handles replication and sharding. It does this by utilizing a system of True Time. This system means that their are GPS clocks in all the data centers where Google Spanner is operational. These clocks work together to order transactions by time, making it possible to determine causal relationships between data simply by looking at the commit timestamps. While these capabilities are wonderful, they are not required for a small humanitarian center that does not require cutting-edge performance, consistency, or availability. 
+
+It's features include:
+- Online schema updates without any downtime
+- Audit logs for security purposes
+- High availability (99.99% for single region deployments and 99.999% for multi-region ) and near zero downtime (about 26.3 seconds of unavailability per month)
+- Unlimited capacity
+- Global replication
+- Granular Instance sizing
+
+While it is easy to view google spanner as a database solution for large datasets, it can also be utilized for smaller data sets, with lower costs, if the infrasturcture is set up to provision the tools needed and no more. I leveraged an online calculator provided by Google tpo calculate the cost of a potential deployment of Google Spanner, and the cost came to $83.44/month. Google states in its Spanner docs regarding backups: 
+	"You create backups in the same instance as their source database.
+
+	After a backup is created, you can copy the backup to an instance in a different region or project if you need a 	cross-region or cross-project backup. You can then restore from a backup as a new database to any instance in the 	same project. The instance that you are restoring to should have the same instance configuration as the instance 	where the backup is currently stored."
+
+To get data on to Spanner, Dataflow can be utilized for the initial import of bulk data to populate the database (CSV files can be utilized but can only be used for a table at a time and not for the entire database). Integrate.io is a platform that cna be used to schedule data uploads from a local machine to Spanner (https://www.integrate.io/).
+
+Unfortunately, while a Spanner instance can be easily created by a non-technical person, the pipeline to move data from a local device to the Spanner instance cannot. the system does not have a built in reporting tool. However, it can easily be connected to Google Looker Studio for reporting purposes. Looker Studio is free to use and enables users to create reports with dashboards and tables. The visualizations on the dashboard change as the underlying data in the Spanner database changes. It is also important to note that Google Spanner only supports PostgreSQL and does not support MySQL.
+
+In conclusion, to use Google Spanner, an application/system needs to be created to collect and store information on a local machine before it is scheduled (using integrate.io or any other tool) to be uploaded to Google Spanner (DataFlow can be used for the initial export to Spanner). If the database is to be created from CSV files, it has to be created a table at a time. Finally, Lookup Studio can be used for dashboard visualization.
+
+* Google Cloud Spanner Page - https://cloud.google.com/spanner/
+* Google Cloud Services Cost Calculator - https://cloud.google.com/products/calculator?dl=CiQ2MDE2YzMwMy02NTE2LTQyZDUtOWU2Ny0yODg3Mjc5ZTFmMTEQCxokMzgwMUQ3NjMtRjJFMC00Mjk2LUFDRDAtOEU5NzYwNTJCREZE
+* Looker Dashboard Tutorial - https://youtu.be/nLHypcQymkY?si=0mLbBIqyPwLIzOcX
+* Backup - https://cloud.google.com/spanner/docs/backup/choose-backup-import
+* Ales Penkaver - https://www.lightspeedhq.com/blog/google-cloud-spanner-good-bad-ugly/
